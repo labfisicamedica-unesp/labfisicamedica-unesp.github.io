@@ -1,0 +1,10 @@
+# anotações internas de trabalho — não publicar
+CLAUDE.md
+.claude/
+
+# temporários
+*.bak
+*.tmp
+~$*
+Thumbs.db
+.DS_Store
