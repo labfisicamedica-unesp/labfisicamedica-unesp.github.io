@@ -350,6 +350,10 @@
   .field-group input:focus,.field-group textarea:focus{outline:none;border-color:var(--mask)}
   .field-group textarea{resize:vertical;min-height:110px}
   .contato .btn-primary{border:0;cursor:pointer;font-family:inherit}
+  .contato .btn-ghost{background:transparent;cursor:pointer;font-family:inherit}
+  .form-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .btn-link{background:none;border:0;padding:6px 2px;color:var(--mask);font-family:'IBM Plex Mono',monospace;font-size:12.5px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .btn-link:hover{color:var(--paper)}
   .form-note{margin-top:14px;font-size:13px;line-height:1.55;color:var(--steel-2);max-width:46ch}
   .form-note a{color:var(--mask)}
   .contact-info{display:flex;flex-direction:column;gap:26px}
@@ -1242,8 +1246,12 @@
         <div class="field-group"><label for="email">E-mail</label><input id="email" type="email" required placeholder="voce@instituicao.br"/></div>
         <div class="field-group"><label for="assunto">Assunto</label><input id="assunto" type="text" placeholder="Pós-graduação · parceria · outro"/></div>
         <div class="field-group"><label for="msg">Mensagem</label><textarea id="msg" required placeholder="Descreva seu interesse ou proposta"></textarea></div>
-        <button type="submit" class="btn btn-primary">Enviar por e-mail</button>
-        <p class="form-note">O botão abre seu programa de e-mail com a mensagem pronta para envio. Se nada abrir, escreva direto para <a href="mailto:allan.alves@unesp.br">allan.alves@unesp.br</a>.</p>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" data-via="gmail">Abrir no Gmail</button>
+          <button type="submit" class="btn btn-ghost" data-via="mailto">Abrir no app de e-mail</button>
+          <button type="button" class="btn-link" id="copyMsg">copiar a mensagem</button>
+        </div>
+        <p class="form-note">O Gmail abre numa nova aba com o e-mail pronto; a outra opção usa o programa de e-mail do seu computador. Se preferir, copie a mensagem e envie para <a href="mailto:allan.alves@unesp.br">allan.alves@unesp.br</a>.</p>
       </form>
       <div class="contact-info reveal">
         <div class="info-item">
@@ -1315,17 +1323,37 @@
 
   // Sem backend: monta um mailto e deixa o envio com o cliente de e-mail do visitante.
   // O formulário não é limpo, para o texto não se perder se nenhum cliente abrir.
-  function handleSubmit(e){
-    e.preventDefault();
-    const f=e.target, v=id=>f.querySelector('#'+id).value.trim();
+  // Sem backend: o formulário monta a mensagem e a entrega ao Gmail (nova aba) ou ao cliente de e-mail (mailto).
+  // Os campos não são limpos, para o texto não se perder se nada abrir.
+  const CONTATO_EMAIL='allan.alves@unesp.br';
+  function montarMensagem(f){
+    const v=id=>f.querySelector('#'+id).value.trim();
     const subject='[Lab. Física Médica] '+(v('assunto')||'Contato pelo site');
     const body=v('msg')+'\n\n'+v('nome')+' <'+v('email')+'>';
-    window.location.href='mailto:allan.alves@unesp.br?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
-    const btn=f.querySelector('button');
-    btn.textContent='Abrindo seu e-mail…';
-    setTimeout(()=>{btn.textContent='Enviar por e-mail';},2600);
+    return {subject,body};
+  }
+  function handleSubmit(e){
+    e.preventDefault();
+    const f=e.target, btn=(e.submitter||f.querySelector('button[type=submit]')), via=btn.dataset.via||'mailto';
+    const {subject,body}=montarMensagem(f), label=btn.textContent;
+    if(via==='gmail'){
+      window.open('https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(CONTATO_EMAIL)+'&su='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body),'_blank','noopener');
+      btn.textContent='Gmail aberto em nova aba';
+    }else{
+      window.location.href='mailto:'+CONTATO_EMAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+      btn.textContent='Abrindo seu e-mail…';
+    }
+    setTimeout(()=>{btn.textContent=label;},2600);
     return false;
   }
+  document.getElementById('copyMsg').addEventListener('click',async ev=>{
+    const f=ev.target.closest('form'); if(!f.reportValidity())return;
+    const {subject,body}=montarMensagem(f);
+    const texto='Para: '+CONTATO_EMAIL+'\nAssunto: '+subject+'\n\n'+body;
+    try{await navigator.clipboard.writeText(texto);ev.target.textContent='mensagem copiada ✓';}
+    catch(err){ev.target.textContent='não foi possível copiar';}
+    setTimeout(()=>{ev.target.textContent='copiar a mensagem';},2600);
+  });
 
   // scroll reveal
   const io=new IntersectionObserver((entries)=>{
