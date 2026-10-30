@@ -11,3 +11,6 @@ Thumbs.db
 
 # QR code para slides (não faz parte do site)
 qrcode/
+
+# scripts locais de manutenção (tradução, verificação) — fora do site publicado
+tools/

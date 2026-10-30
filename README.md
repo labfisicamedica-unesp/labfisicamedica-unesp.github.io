@@ -10,6 +10,13 @@ máquina sobre dados clínicos.
 O site é um único arquivo, `index.html`, com todos os recursos embutidos (fontes, logos e fotos).
 Não depende de servidor nem de conexão externa: basta abrir o arquivo no navegador.
 
+## Idiomas
+
+O conteúdo é em português. A versão em inglês está no mesmo arquivo e é ativada pelo botão
+**EN/PT** no cabeçalho ou pelo endereço <https://labfisicamedica-unesp.github.io/?lang=en>.
+Títulos de trabalhos, nomes de pessoas e de eventos permanecem no idioma original.
+A escolha de idioma feita pelo botão fica guardada apenas no navegador do visitante (sem cookies).
+
 ## Publicação
 
 Hospedado com GitHub Pages a partir da branch `main`. Qualquer alteração em `index.html` é
