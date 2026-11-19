@@ -32,3 +32,9 @@ certificados dos eventos). Correções e atualizações: allan.alves@unesp.br.
 
 Código e design do site © Laboratório de Física Médica, IB/UNESP. As fotografias dos integrantes
 e os logotipos institucionais pertencem aos seus titulares e não estão licenciados para reúso.
+
+A tomografia do painel inicial é uma fatia do banco público LIDC-IDRI, distribuído pelo The Cancer
+Imaging Archive sob a licença CC BY 3.0, aqui recortada e recolorida. Dados:
+<https://doi.org/10.7937/K9/TCIA.2015.LO9QL9SX>. Referência: Armato SG 3rd et al., *Medical Physics*
+38:915–931, 2011, <https://doi.org/10.1118/1.3528204>. Os contornos sobre a imagem vêm das anotações
+do próprio banco; os valores numéricos do painel são ilustrativos.
